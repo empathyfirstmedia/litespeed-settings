@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 2023
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech
 // @require      none
