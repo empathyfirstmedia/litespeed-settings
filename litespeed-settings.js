@@ -2,12 +2,11 @@
 // @name LightSpeed / VendHQ Toolbox 2023
 // @version 1.1
 // @description Modifies the Lightspeed POS
-// @encoding utf-8
 // @author Tyler Hall Tech <tyler@tylerhalltech.com>
 // @updateURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // @downloadURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // @namespace https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
-// @homepageURL https://tylerhalltech.com
+// @homepageURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // @match https://*.vendhq.com/*
 // @match https://*.vendhq.com/register.php*
 // @match https://*.merchantos.com/register.php*
@@ -15,13 +14,17 @@
 // @match https://*.lightspeedpos.com/*
 // @match https://*.merchantos.com/*
 // @match https://*.vendhq.com/*
+// @match        https://*.vendhq.com/*
+// @match        https://*.vendhq.com/register.php*
+// @match        https://*.merchantos.com/register.php*
+// @match        https://*.lightspeedapp.com/*
+// @match        https://*.lightspeedpos.com/*
+// @match        https://*.merchantos.com/*
+// @match        https://*.vendhq.com/*
+// @match        https://*.webshopapp.com/admin/*
+// @match        https://*.shoplightspeed.com/admin/*
 // @grant unsafeWindow
 // @grant GM_xmlhttpRequest
-// @compatible   chrome
-// @compatible   firefox
-// @compatible   edge
-// @compatible   opera
-// @compatible   safari
 // @run-at       document-idle
 // ==/UserScript==
 
