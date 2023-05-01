@@ -69,86 +69,86 @@
             exportAllButton.href = `/customer?format=csv&page=1&page_size=${pageSize}&dir=ASC&order=DEFAULT`;
             exportAllButton.textContent = 'Export All Customers';
             exportPagesDiv.appendChild(exportAllButton);
-    }
-}
-
-// Define a variable to store the input value (barcode) temporarily.
-let barcodeInput = '';
-
-// Define a variable for the maximum delay between characters (in milliseconds).
-const maxCharacterDelay = 30;
-
-// Define a variable to store the timer.
-let timer = null;
-
-// Define a variable to store the timestamp of the last keydown event.
-let lastKeydownTimestamp = null;
-
-// Define a function to handle keydown events.
-const handleKeydown = (event) => {
-    // Get the current timestamp.
-    const currentTimestamp = Date.now();
-
-    // If the last keydown event occurred within the maximum character delay, treat it as a barcode input.
-    if (lastKeydownTimestamp && currentTimestamp - lastKeydownTimestamp <= maxCharacterDelay) {
-        // Append the key pressed to the barcode input.
-        barcodeInput += event.key;
-
-        // Clear the previous timer if it exists.
-        if (timer) {
-            clearTimeout(timer);
         }
+    }
 
-        // Set a new timer to process the barcode input after a short delay.
-        timer = setTimeout(() => {
-            // If the barcode input is not empty, process the barcode input.
-            if (barcodeInput.length > 0) {
-                // Find the search field on the webpage.
-                const searchField = document.querySelector('input.vd-autocomplete-input');
+    // Define a variable to store the input value (barcode) temporarily.
+    let barcodeInput = '';
 
-                // If the search field is found, set its value to the barcode input.
-                if (searchField) {
-                    searchField.value = barcodeInput;
+    // Define a variable for the maximum delay between characters (in milliseconds).
+    const maxCharacterDelay = 30;
 
-                    // Trigger an 'input' event on the search field to notify React.
-                    const inputEvent = new Event('input', { bubbles: true });
-                    searchField.dispatchEvent(inputEvent);
+    // Define a variable to store the timer.
+    let timer = null;
 
-                    // Trigger a 'change' event on the search field to update the search results.
-                    const changeEvent = new Event('change', { bubbles: true });
-                    searchField.dispatchEvent(changeEvent);
-                }
+    // Define a variable to store the timestamp of the last keydown event.
+    let lastKeydownTimestamp = null;
+
+    // Define a function to handle keydown events.
+    const handleKeydown = (event) => {
+        // Get the current timestamp.
+        const currentTimestamp = Date.now();
+
+        // If the last keydown event occurred within the maximum character delay, treat it as a barcode input.
+        if (lastKeydownTimestamp && currentTimestamp - lastKeydownTimestamp <= maxCharacterDelay) {
+            // Append the key pressed to the barcode input.
+            barcodeInput += event.key;
+
+            // Clear the previous timer if it exists.
+            if (timer) {
+                clearTimeout(timer);
             }
 
-            // Reset the barcode input and timer.
-            barcodeInput = '';
-            timer = null;
-        }, maxCharacterDelay);
+            // Set a new timer to process the barcode input after a short delay.
+            timer = setTimeout(() => {
+                // If the barcode input is not empty, process the barcode input.
+                if (barcodeInput.length > 0) {
+                    // Find the search field on the webpage.
+                    const searchField = document.querySelector('input.vd-autocomplete-input');
+
+                    // If the search field is found, set its value to the barcode input.
+                    if (searchField) {
+                        searchField.value = barcodeInput;
+
+                        // Trigger an 'input' event on the search field to notify React.
+                        const inputEvent = new Event('input', { bubbles: true });
+                        searchField.dispatchEvent(inputEvent);
+
+                        // Trigger a 'change' event on the search field to update the search results.
+                        const changeEvent = new Event('change', { bubbles: true });
+                        searchField.dispatchEvent(changeEvent);
+                    }
+                }
+
+                // Reset the barcode input and timer.
+                barcodeInput = '';
+                timer = null;
+            }, maxCharacterDelay);
+        }
+
+        // Update the timestamp of the last keydown event.
+        lastKeydownTimestamp = currentTimestamp;
+    };
+
+    // Function to handle barcode input based on the "Setting 3" setting
+    function handleBarcodeInput(enabled) {
+        if (enabled) {
+            document.addEventListener('keydown', handleKeydown);
+        } else {
+            document.removeEventListener('keydown', handleKeydown);
+        }
     }
 
-    // Update the timestamp of the last keydown event.
-    lastKeydownTimestamp = currentTimestamp;
-};
-
-// Function to handle barcode input based on the "Setting 3" setting
-function handleBarcodeInput(enabled) {
-    if (enabled) {
-        document.addEventListener('keydown', handleKeydown);
-    } else {
-        document.removeEventListener('keydown', handleKeydown);
-    }
-}
-
-// Call the updateLogo and addExportAllCustomersButton functions initially
-updateLogo();
-addExportAllCustomersButton(localStorage.getItem('setting2') === 'true');
-handleBarcodeInput(localStorage.getItem('setting3') === 'true');
-// Call the handleAutoPasswordSignIn function initially
-//handleAutoPasswordSignIn(localStorage.getItem('autoPasswordSignIn') === 'true');
-// Call the handleAutoPasswordSignIn function initially
-const autoPasswordSignInEnabled = localStorage.getItem('autoPasswordSignIn') === 'true';
-const autoSubmitEnabled = localStorage.getItem('autoSubmit') === 'true';
-handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
+    // Call the updateLogo and addExportAllCustomersButton functions initially
+    updateLogo();
+    addExportAllCustomersButton(localStorage.getItem('setting2') === 'true');
+    handleBarcodeInput(localStorage.getItem('setting3') === 'true');
+    // Call the handleAutoPasswordSignIn function initially
+    //handleAutoPasswordSignIn(localStorage.getItem('autoPasswordSignIn') === 'true');
+    // Call the handleAutoPasswordSignIn function initially
+    const autoPasswordSignInEnabled = localStorage.getItem('autoPasswordSignIn') === 'true';
+    const autoSubmitEnabled = localStorage.getItem('autoSubmit') === 'true';
+    handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
 
     // Create a floating button
     const floatingButton = document.createElement('button');
@@ -201,8 +201,8 @@ handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
 
     `;
 
-    // Append the <style> element to the document's <head>
-    document.head.appendChild(styleElement);
+// Append the <style> element to the document's <head>
+document.head.appendChild(styleElement);
 
 // Create a settings panel
 const settingsPanel = document.createElement('div');
@@ -219,15 +219,15 @@ settingsPanel.style.zIndex = '9999';
 // settingsPanel.style.boxShadow = '0 0 5px 3px rgba(0, 0, 0, 0.2)';
 document.body.appendChild(settingsPanel);
 
-    // Create a content container for the settings panel
-    const settingsContent = document.createElement('div');
-    settingsContent.classList.add('vd-popover-content');
-    settingsPanel.appendChild(settingsContent);
+// Create a content container for the settings panel
+const settingsContent = document.createElement('div');
+settingsContent.classList.add('vd-popover-content');
+settingsPanel.appendChild(settingsContent);
 
-    // Create a list container for the settings panel
-    const settingsList = document.createElement('ul');
-    settingsList.classList.add('vd-popover-list');
-    settingsContent.appendChild(settingsList);
+// Create a list container for the settings panel
+const settingsList = document.createElement('ul');
+settingsList.classList.add('vd-popover-list');
+settingsContent.appendChild(settingsList);
 
 // Function to create a switch for a setting
 // function createSettingSwitch(label, settingKey, onChange) {
@@ -414,7 +414,7 @@ createSettingSwitch('Auto-Submit', 'autoSubmit', (enabled) => {
     console.log('Auto-Submit Updated:', enabled);
 });
 
-    // Create setting link
+// Create setting link
 createSettingLink('Lightspeed eCom (E-Series)', 'https://my.business.shop/store/86581584');
 
 // Add styles for the settings title
