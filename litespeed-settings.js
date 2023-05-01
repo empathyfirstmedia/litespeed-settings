@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name LightSpeed / VendHQ Toolbox 2023
-// @version 1.0
+// @version 1.1
 // @description Modifies the Lightspeed POS
 // @encoding utf-8
 // @author Tyler Hall Tech <tyler@tylerhalltech.com>
@@ -443,7 +443,7 @@ function createSettingsFooter(versionNumber, authorName) {
 }
 
 // Create the footer for the settings panel
-createSettingsFooter('0.5', 'Tyler Hall Tech');
+createSettingsFooter('1.1', 'Tyler Hall Tech');
 
 // Add styles for the settings footer
 const styleFooter = document.createElement('style');
