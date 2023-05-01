@@ -21,6 +21,7 @@
 // @compatible   opera
 // @compatible   safari
 // @run-at       document-idle
+// @updateURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // ==/UserScript==
 
 (function() {
