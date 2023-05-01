@@ -1,19 +1,11 @@
 // ==UserScript==
-// @name LightSpeed / VendHQ Toolbox 2023
-// @version 1.1
-// @description Modifies the Lightspeed POS
-// @author Tyler Hall Tech <tyler@tylerhalltech.com>
-// @updateURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
-// @downloadURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
-// @namespace https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
-// @homepageURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
-// @match https://*.vendhq.com/*
-// @match https://*.vendhq.com/register.php*
-// @match https://*.merchantos.com/register.php*
-// @match https://*.lightspeedapp.com/*
-// @match https://*.lightspeedpos.com/*
-// @match https://*.merchantos.com/*
-// @match https://*.vendhq.com/*
+// @name         LightSpeed / VendHQ Toolbox 2023
+// @namespace    http://tampermonkey.net/
+// @version      1.2
+// @description  Modifies the Lightspeed POS
+// @author       Tyler Hall Tech
+// @require      none
+// @require      none
 // @match        https://*.vendhq.com/*
 // @match        https://*.vendhq.com/register.php*
 // @match        https://*.merchantos.com/register.php*
@@ -21,11 +13,12 @@
 // @match        https://*.lightspeedpos.com/*
 // @match        https://*.merchantos.com/*
 // @match        https://*.vendhq.com/*
-// @match        https://*.webshopapp.com/admin/*
-// @match        https://*.shoplightspeed.com/admin/*
-// @grant unsafeWindow
-// @grant GM_xmlhttpRequest
+// @icon         <$ICON$>
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
 // @run-at       document-idle
+// @updateURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
+// @downloadURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // ==/UserScript==
 
 (function() {
@@ -446,7 +439,7 @@ function createSettingsFooter(versionNumber, authorName) {
 }
 
 // Create the footer for the settings panel
-createSettingsFooter('1.1', 'Tyler Hall Tech');
+createSettingsFooter('0.5', 'Tyler Hall Tech');
 
 // Add styles for the settings footer
 const styleFooter = document.createElement('style');
