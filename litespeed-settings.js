@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 2023
-// @version      0.6
+// @version      1.0
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech <tyler@tylerhalltech.com>
 // @supportURL   https://tylerhalltech.com
@@ -22,6 +22,7 @@
 // @compatible   safari
 // @run-at       document-idle
 // @updateURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
+// @downloadURL https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-settings.js
 // ==/UserScript==
 
 (function() {
@@ -169,6 +170,7 @@ handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
     // Create a container for the floating button
     const floatingButtonContainer = document.createElement('div');
     floatingButtonContainer.classList.add('vd-dialog-close');
+    floatingButtonContainer.id = 'toolbox-container'; // Assign a unique ID to the container
     floatingButtonContainer.appendChild(floatingButton);
     document.body.appendChild(floatingButtonContainer);
 
@@ -189,6 +191,17 @@ handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
         box-shadow: 0 0 5px 3px rgba(var(--vd-colour--supplementary-rgb), .5);
         border-color: var(--vd-colour--keyline);
     }
+
+  /* Media query for print media */
+  @media print {
+    /* Hide the toolbox when printing */
+    #toolbox-container {
+      display: none;
+    #toolbox-label{
+    display: none;
+    }
+    }
+  }
 
     `;
 
