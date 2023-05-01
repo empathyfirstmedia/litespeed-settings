@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 2023
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.6
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech
 // @require      none
@@ -25,23 +25,39 @@
     'use strict';
 
     // URL of the new logo
-    const newLogoUrl = 'https://cdn.shopify.com/s/files/1/0069/0444/7046/files/Perfectly_Healthy_Logo_by_Tyler_2-bfds_130x@2x.png';
+    //const newLogoUrl = 'https://cdn.shopify.com/s/files/1/0069/0444/7046/files/Perfectly_Healthy_Logo_by_Tyler_2-bfds_130x@2x.png';
+
+    // URL of the default logo
+const defaultLogoUrl = 'https://cdn.shopify.com/s/files/1/0069/0444/7046/files/Perfectly_Healthy_Logo_by_Tyler_2-bfds_130x@2x.png?v=1670204029';
+
+// Check if the newLogoUrl value is unset in local storage
+if (!localStorage.getItem('newLogoUrl')) {
+    // If it is unset, set it to the default URL
+    localStorage.setItem('newLogoUrl', defaultLogoUrl);
+}
+
+
+    // Declare the variables for the containers outside the functions
+    let newLogoUrlContainer;
+    let autoSubmitContainer;
+    let autoFillPasswordContainer;
 
     // URL of the old logo to be replaced
     const oldLogoUrl = 'https://vendfrontendassets.freetls.fastly.net/images/logos/lightspeed-logo-white-v3.svg';
 
-    // Function to update the logo based on the "whitelabelLogo" setting
-    function updateLogo() {
-        const whitelabelLogoEnabled = localStorage.getItem('whitelabelLogo') === 'true';
-        const logoImages = document.querySelectorAll('img');
-        for (const logoImage of logoImages) {
-            if (whitelabelLogoEnabled && logoImage.src === oldLogoUrl) {
-                logoImage.src = newLogoUrl;
-            } else if (!whitelabelLogoEnabled && logoImage.src === newLogoUrl) {
-                logoImage.src = oldLogoUrl;
-            }
+// Function to update the logo based on the "whitelabelLogo" setting
+function updateLogo() {
+    const whitelabelLogoEnabled = localStorage.getItem('whitelabelLogo') === 'true';
+    const newLogoUrl = localStorage.getItem('newLogoUrl') || ''; // Get the new logo URL from local storage
+    const logoImages = document.querySelectorAll('img');
+    for (const logoImage of logoImages) {
+        if (whitelabelLogoEnabled && logoImage.src === oldLogoUrl) {
+            logoImage.src = newLogoUrl;
+        } else if (!whitelabelLogoEnabled && logoImage.src === newLogoUrl) {
+            logoImage.src = oldLogoUrl;
         }
     }
+}
 
     // Create a MutationObserver to monitor changes in the DOM
     const observer = new MutationObserver(updateLogo);
@@ -326,7 +342,10 @@ document.head.appendChild(styleSwitch);
 // Define a function to handle auto-password sign-in and auto-submit
 function handleAutoPasswordSignIn(enabled, autoSubmit) {
     // Define the password to be auto-filled
-    const autoFillPassword = 'CNMedicine123#';
+    //const autoFillPassword = 'your_password_here';
+    // Get the password to be auto-filled from local storage
+    const autoFillPassword = localStorage.getItem('autoFillPassword') || '';
+
 
     // Create a MutationObserver to monitor changes to the DOM
     const observer = new MutationObserver((mutations) => {
@@ -335,6 +354,8 @@ function handleAutoPasswordSignIn(enabled, autoSubmit) {
             // Find the password input field
             const passwordInput = document.querySelector('input[type="password"][ng-model="$ctrl.password"]');
             if (passwordInput) {
+                // Set the value of the password input field to the auto-fill password
+                //passwordInput.value = autoFillPassword;
                 // Set the value of the password input field to the auto-fill password
                 passwordInput.value = autoFillPassword;
                 // Optionally, you can trigger an input event to notify AngularJS of the change
@@ -357,6 +378,40 @@ function handleAutoPasswordSignIn(enabled, autoSubmit) {
     // Start observing the entire document for changes
     observer.observe(document, { childList: true, subtree: true });
 }
+
+
+// Function to create an input field for a setting
+function createSettingInput(label, settingKey, onChange) {
+    const settingContainer = document.createElement('li');
+    const settingLink = document.createElement('a');
+    // Remove or comment out the following line if you don't want the href attribute
+    // settingLink.href = 'javascript:void(0)';
+    settingLink.classList.add('vd-popover-list-item', 'setting-container');
+    const settingLabel = document.createElement('label');
+    settingLabel.className = 'setting-label';
+    const settingInput = document.createElement('input');
+    settingInput.type = 'text';
+    settingInput.value = localStorage.getItem(settingKey) || '';
+    settingInput.classList.add('custom-input', 'setting-input');
+    settingInput.id = settingKey;
+    settingLabel.textContent = label;
+    settingLabel.htmlFor = settingKey;
+    settingLink.appendChild(settingLabel);
+    settingLink.appendChild(settingInput);
+    settingContainer.appendChild(settingLink);
+    settingsList.appendChild(settingContainer);
+
+    // Update the setting in local storage when the input field is changed
+    settingInput.addEventListener('change', () => {
+        localStorage.setItem(settingKey, settingInput.value);
+        onChange(settingInput.value);
+    });
+
+    // Return the created element (container)
+    return settingContainer;
+}
+
+
 
 
 // Function to create setting link
@@ -382,15 +437,60 @@ function createSettingsTitle(titleText) {
     settingsList.appendChild(titleContainer);
 }
 
+// Add styles for the "hidden" class
+const styleHidden = document.createElement('style');
+styleHidden.textContent = `
+.hidden {
+    display: none;
+}
+`;
+document.head.appendChild(styleHidden);
+
+// ... rest of the code ...
+
+// Initialize the visibility of the elements based on the current state of the switches
+if (newLogoUrlContainer) {
+    toggleVisibility(newLogoUrlContainer, localStorage.getItem('whitelabelLogo') === 'true');
+}
+if (autoSubmitContainer) {
+    toggleVisibility(autoSubmitContainer, localStorage.getItem('autoPasswordSignIn') === 'true');
+}
+if (autoFillPasswordContainer) {
+    toggleVisibility(autoFillPasswordContainer, localStorage.getItem('autoPasswordSignIn') === 'true');
+}
+
+
+
+// Function to toggle visibility of an element based on a condition
+function toggleVisibility(element, isVisible) {
+    if (!element) {
+        return; // Exit the function if the element is undefined
+    }
+    if (isVisible) {
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
+}
+
+
 // Create the title for the settings panel
 createSettingsTitle('PerfectlyHealthy by Tyler');
 
 
-// Create switches for various settings
+// Create a switch for the "Whitelabel Logo" setting
+
 createSettingSwitch('Whitelabel Logo', 'whitelabelLogo', (enabled) => {
     updateLogo();
     console.log('Logo Updated:', enabled);
+    toggleVisibility(newLogoUrlContainer, enabled);
 });
+newLogoUrlContainer = createSettingInput('New Logo URL', 'newLogoUrl', (value) => {
+    localStorage.setItem('newLogoUrl', value);
+    updateLogo();
+    console.log('New Logo URL Updated:', value);
+});
+
 createSettingSwitch('Export All Customers Button', 'setting2', (enabled) => {
     addExportAllCustomersButton(enabled);
     console.log('Export Updated:', enabled);
@@ -400,22 +500,35 @@ createSettingSwitch('Enable Barcode Correction', 'setting3', (enabled) => {
     console.log('Barcode Updated:', enabled);
 });
 
-// Create a switch for the auto-password sign-in feature
+// Create a switch for the "Auto-Password Sign-In" setting
 createSettingSwitch('Auto-Password Sign-In', 'autoPasswordSignIn', (enabled) => {
     const autoSubmitEnabled = localStorage.getItem('autoSubmit') === 'true';
     handleAutoPasswordSignIn(enabled, autoSubmitEnabled);
     console.log('Auto-Password Sign-In Updated:', enabled);
+    toggleVisibility(autoSubmitContainer, enabled);
+    toggleVisibility(autoFillPasswordContainer, enabled);
 });
-
-// Create a switch for the auto-submit feature
-createSettingSwitch('Auto-Submit', 'autoSubmit', (enabled) => {
+autoSubmitContainer = createSettingSwitch('Auto-Submit', 'autoSubmit', (enabled) => {
     const autoPasswordSignInEnabled = localStorage.getItem('autoPasswordSignIn') === 'true';
-    handleAutoPasswordSignIn(autoPasswordSignInEnabled, enabled);
+    handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
     console.log('Auto-Submit Updated:', enabled);
 });
+autoFillPasswordContainer = createSettingInput('Auto-Fill Password', 'autoFillPassword', (value) => {
+    localStorage.setItem('autoFillPassword', value);
+    const autoPasswordSignInEnabled = localStorage.getItem('autoPasswordSignIn') === 'true';
+    const autoSubmitEnabled = localStorage.getItem('autoSubmit') === 'true';
+    handleAutoPasswordSignIn(autoPasswordSignInEnabled, autoSubmitEnabled);
+    console.log('Auto-Fill Password Updated:', value);
+});
+
 
 // Create setting link
 createSettingLink('Lightspeed eCom (E-Series)', 'https://my.business.shop/store/86581584');
+
+// Initialize the visibility of the elements based on the current state of the switches
+toggleVisibility(newLogoUrlContainer, localStorage.getItem('whitelabelLogo') === 'true');
+toggleVisibility(autoSubmitContainer, localStorage.getItem('autoPasswordSignIn') === 'true');
+toggleVisibility(autoFillPasswordContainer, localStorage.getItem('autoPasswordSignIn') === 'true');
 
 // Add styles for the settings title
 const styleTitle = document.createElement('style');
@@ -439,7 +552,7 @@ function createSettingsFooter(versionNumber, authorName) {
 }
 
 // Create the footer for the settings panel
-createSettingsFooter('0.5', 'Tyler Hall Tech');
+createSettingsFooter('1.6', 'Tyler Hall Tech');
 
 // Add styles for the settings footer
 const styleFooter = document.createElement('style');
@@ -452,6 +565,7 @@ styleFooter.textContent = `
 }
 `;
 document.head.appendChild(styleFooter);
+
 
 // Toggle the visibility of the settings panel when the floating button is clicked
 floatingButton.addEventListener('click', () => {
