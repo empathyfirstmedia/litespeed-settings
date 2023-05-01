@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 2023
-// @version      0.5
+// @version      0.6
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech <tyler@tylerhalltech.com>
 // @supportURL   https://tylerhalltech.com
