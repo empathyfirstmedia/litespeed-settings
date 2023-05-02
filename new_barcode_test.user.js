@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 4.1
 // @namespace    http://tampermonkey.net/
-// @version      4.1
+// @version      4.2
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech
 // @require      none
