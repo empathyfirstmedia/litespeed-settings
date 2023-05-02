@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         LightSpeed / VendHQ Toolbox 4.0
+// @name         LightSpeed / VendHQ Toolbox 4.1
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.1
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech
 // @require      none
@@ -17,8 +17,8 @@
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @run-at       document-idle
-// @updateURL    https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-toolbox.user.js
-// @downloadURL  https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/litespeed-toolbox.user.js
+// @updateURL    https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/new_barcode_test.user.js
+// @downloadURL  https://raw.githubusercontent.com/tyhallcsu/litespeed-settings/main/new_barcode_test.user.js
 // ==/UserScript==
 
 (function() {
@@ -585,7 +585,7 @@ function handleBarcodeInput(enabled) {
     }
 
     // Create the footer for the settings panel
-    createSettingsFooter('3.0', 'Tyler Hall Tech');
+    createSettingsFooter('4.1', 'Tyler Hall Tech');
 
     // Add styles for the settings footer
     const styleFooter = document.createElement('style');
