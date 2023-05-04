@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LightSpeed / VendHQ Toolbox 4.1
 // @namespace    http://tampermonkey.net/
-// @version      4.2
+// @version      4.3
 // @description  Modifies the Lightspeed POS
 // @author       Tyler Hall Tech
 // @require      none
@@ -92,85 +92,134 @@
         }
     }
 
+// Tampermonkey or Greasemonkey script to handle barcode input
 
 // Define a variable to store the input value (barcode) temporarily.
 let barcodeInput = '';
 
 // Define a function to handle keydown events.
 const handleKeydown = (event) => {
-    
-     // Check for the "Enter" key using the "key" property
-  if (event.key === 'Enter') {
-    console.log('Enter key pressed');
+  // Define a regular expression to match valid barcode characters (digits and uppercase letters)
+  const barcodeRegex = /^[A-Z0-9]+$/;
+
+  // Check if the key pressed is a valid barcode character
+  if (barcodeRegex.test(event.key)) {
+    // Append the key pressed to the barcode input
+    barcodeInput += event.key;
   }
 
-  // Check for the "Carriage Return" (CR) character using the "keyCode" or "which" property
-  if (event.keyCode === 13 || event.which === 13) {
-    console.log('Carriage Return (CR) character detected');
-  }
+  // Check for the "Enter" key using the "key" property
+  if (event.key === 'Enter' && barcodeInput.length > 0) {
+    // Find the search field on the webpage
+    const searchField = document.querySelector('input.vd-autocomplete-input');
 
-  // Check for the "Line Feed" (LF) character using the "keyCode" or "which" property
-  if (event.keyCode === 10 || event.which === 10) {
-    console.log('Line Feed (LF) character detected');
-  }
-    // If the key pressed is not the Enter key, append it to the barcode input.
-    if (event.key !== 'Enter') {
-        barcodeInput += event.key;
-        console.log("barcodeInput: ",barcodeInput);
-    if (event.key == 'Enter') {
-        console.log("Enter Key: ");
-        console.log("barcodeInput: ",barcodeInput);
-                if (barcodeInput.length > 0) {
-            // Find the search field on the webpage.
-            const searchField = document.querySelector('input.vd-autocomplete-input');
+    // If the search field is found, set its value to the barcode input
+    if (searchField) {
+      searchField.value = barcodeInput;
 
-            // If the search field is found, set its value to the barcode input.
-            if (searchField) {
-                searchField.value = barcodeInput;
+      // Trigger an 'input' event on the search field to notify React
+      const inputEvent = new Event('input', { bubbles: true });
+      searchField.dispatchEvent(inputEvent);
 
-                // Trigger an 'input' event on the search field to notify React.
-                const inputEvent = new Event('input', { bubbles: true });
-                searchField.dispatchEvent(inputEvent);
-
-                // Trigger a 'change' event on the search field to update the search results.
-                const changeEvent = new Event('change', { bubbles: true });
-                searchField.dispatchEvent(changeEvent);
-            }
-        }
+      // Trigger a 'change' event on the search field to update the search results
+      const changeEvent = new Event('change', { bubbles: true });
+      searchField.dispatchEvent(changeEvent);
     }
-    } else {
-        // If the Enter key is pressed, process the barcode input.
-        if (barcodeInput.length > 0) {
-            // Find the search field on the webpage.
-            const searchField = document.querySelector('input.vd-autocomplete-input');
 
-            // If the search field is found, set its value to the barcode input.
-            if (searchField) {
-                searchField.value = barcodeInput;
-
-                // Trigger an 'input' event on the search field to notify React.
-                const inputEvent = new Event('input', { bubbles: true });
-                searchField.dispatchEvent(inputEvent);
-
-                // Trigger a 'change' event on the search field to update the search results.
-                const changeEvent = new Event('change', { bubbles: true });
-                searchField.dispatchEvent(changeEvent);
-            }
-        }
-
-        // Reset the barcode input.
-        barcodeInput = '';
-    }
+    // Reset the barcode input
+    barcodeInput = '';
+  }
 };
 
 // Function to handle barcode input based on the "Setting 3" setting
 function handleBarcodeInput(enabled) {
-    if (enabled) {
-        document.addEventListener('keydown', handleKeydown);
-    } else {
-        document.removeEventListener('keydown', handleKeydown);
-    }
+  if (enabled) {
+    // Add the keydown event listener to handle barcode input
+    document.addEventListener('keydown', handleKeydown);
+  } else {
+    // Remove the keydown event listener
+    document.removeEventListener('keydown', handleKeydown);
+  }
 }
+    
+// // Define a variable to store the input value (barcode) temporarily.
+// let barcodeInput = '';
+
+// // Define a function to handle keydown events.
+// const handleKeydown = (event) => {
+    
+//      // Check for the "Enter" key using the "key" property
+//   if (event.key === 'Enter') {
+//     console.log('Enter key pressed');
+//   }
+
+//   // Check for the "Carriage Return" (CR) character using the "keyCode" or "which" property
+//   if (event.keyCode === 13 || event.which === 13) {
+//     console.log('Carriage Return (CR) character detected');
+//   }
+
+//   // Check for the "Line Feed" (LF) character using the "keyCode" or "which" property
+//   if (event.keyCode === 10 || event.which === 10) {
+//     console.log('Line Feed (LF) character detected');
+//   }
+//     // If the key pressed is not the Enter key, append it to the barcode input.
+//     if (event.key !== 'Enter') {
+//         barcodeInput += event.key;
+//         console.log("barcodeInput: ",barcodeInput);
+//     if (event.key == 'Enter') {
+//         console.log("Enter Key: ");
+//         console.log("barcodeInput: ",barcodeInput);
+//                 if (barcodeInput.length > 0) {
+//             // Find the search field on the webpage.
+//             const searchField = document.querySelector('input.vd-autocomplete-input');
+
+//             // If the search field is found, set its value to the barcode input.
+//             if (searchField) {
+//                 searchField.value = barcodeInput;
+
+//                 // Trigger an 'input' event on the search field to notify React.
+//                 const inputEvent = new Event('input', { bubbles: true });
+//                 searchField.dispatchEvent(inputEvent);
+
+//                 // Trigger a 'change' event on the search field to update the search results.
+//                 const changeEvent = new Event('change', { bubbles: true });
+//                 searchField.dispatchEvent(changeEvent);
+//             }
+//         }
+//     }
+//     } else {
+//         // If the Enter key is pressed, process the barcode input.
+//         if (barcodeInput.length > 0) {
+//             // Find the search field on the webpage.
+//             const searchField = document.querySelector('input.vd-autocomplete-input');
+
+//             // If the search field is found, set its value to the barcode input.
+//             if (searchField) {
+//                 searchField.value = barcodeInput;
+
+//                 // Trigger an 'input' event on the search field to notify React.
+//                 const inputEvent = new Event('input', { bubbles: true });
+//                 searchField.dispatchEvent(inputEvent);
+
+//                 // Trigger a 'change' event on the search field to update the search results.
+//                 const changeEvent = new Event('change', { bubbles: true });
+//                 searchField.dispatchEvent(changeEvent);
+//             }
+//         }
+
+//         // Reset the barcode input.
+//         barcodeInput = '';
+//     }
+// };
+
+// // Function to handle barcode input based on the "Setting 3" setting
+// function handleBarcodeInput(enabled) {
+//     if (enabled) {
+//         document.addEventListener('keydown', handleKeydown);
+//     } else {
+//         document.removeEventListener('keydown', handleKeydown);
+//     }
+// }
 
     // Function to create a switch for a setting
     function createSettingSwitch(label, settingKey, onChange) {
